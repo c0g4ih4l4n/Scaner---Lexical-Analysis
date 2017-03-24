@@ -23,22 +23,53 @@ extern CharCode charCodes[];
 
 void skipBlank() {
   // TODO
+  while ((currentChar != EOF) && (charCodes[currentChar] == CHAR_SPACE)) {
+  	readChar();
+  }
 }
 
 void skipComment() {
   // TODO
+  while (currentChar != EOF) {
+  	if (charCodes[currentChar] == CHAR_TIMES) {
+  		readChar ();
+  		if (charCodes[currentChar] == CHAR_RPAR) break;
+  	}
+  	readChar ();
+  }
+  readChar ();
 }
 
 Token* readIdentKeyword(void) {
   // TODO
+  Token * ident;
+  char string[MAX_IDENT_LEN + 1];
+
+  int i = 0;
+  int linePivot = lineNo, colPivot = colNo;
+  
+  while ((currentChar != EOF) && (charCodes[currentChar] != CHAR_SPACE)) {
+  	string[i] = currentChar;
+  	i++;
+  	readChar();
+  }
+  
+  string[i] = '\0';
+  
+  ident = makeToken(checkKeyword(string), linePivot, colPivot);
+  
+  return ident;
 }
 
 Token* readNumber(void) {
   // TODO
+  Token * number;
+  return NULL;
 }
 
 Token* readConstChar(void) {
   // TODO
+  return NULL;
 }
 
 Token* getToken(void) {
@@ -59,6 +90,13 @@ Token* getToken(void) {
     // ....
     // TODO
     // ....
+  case CHAR_LPAR:
+  	readChar(); 
+  	if (charCodes[currentChar] == CHAR_TIMES) 
+  		skipComment();
+  	else 
+  		error(ERR_INVALIDSYMBOL, lineNo, colNo);
+  	return getToken();
   default:
     token = makeToken(TK_NONE, lineNo, colNo);
     error(ERR_INVALIDSYMBOL, lineNo, colNo);
