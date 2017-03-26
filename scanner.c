@@ -36,7 +36,7 @@ void skipComment() {
   		readChar ();
   		if (charCodes[currentChar] == CHAR_RPAR) {readChar (); break;}
   	}
-  	readChar ();
+  	else readChar ();
   }
 }
 
